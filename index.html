@@ -1,0 +1,698 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Table Lamp Login</title>
+
+<style>
+
+  /* RESET/ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: #080d1b;
+}
+
+/* ROOM */
+.room {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+    background: radial-gradient(
+        ellipse at 35% 45%,
+        #17213b,
+        #080d1b 75%
+    );
+
+    transition: background 1s ease;
+}
+
+body.active .room {
+    background: radial-gradient(
+        ellipse at 30% 40%,
+        #77502d,
+        #302019 55%,
+        #100d10 100%
+    );
+}
+
+ /* LIGHT BEAM  */
+.light-beam {
+    position: absolute;
+    top: 10%;
+    left: 15%;
+
+    width: 42%;
+    height: 66%;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 232, 160, 0.85),
+        rgba(255, 184, 75, 0.35),
+        rgba(255, 165, 50, 0.05)
+    );
+
+    clip-path: polygon(
+        35% 0%,
+        65% 0%,
+        100% 100%,
+        0% 100%
+    );
+
+    filter: blur(25px);
+    opacity: 0;
+
+    transition: opacity 1s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+body.active .light-beam {
+    opacity: 1;
+}
+
+/* EXTRA ROOM GLOW */
+.room-glow {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+
+    width: 55%;
+    height: 75%;
+
+    background: radial-gradient(
+        ellipse,
+        rgba(255, 177, 68, 0.25),
+        transparent 70%
+    );
+
+    opacity: 0;
+    transition: opacity 1s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+body.active .room-glow {
+    opacity: 1;
+}
+
+/* TABLE - PERFECTLY LEVEL */
+.table {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 16%;
+
+    background: linear-gradient(
+        to bottom,
+        #8b4c22 0%,
+        #713a1c 12%,
+        #452416 70%,
+        #28140d 100%
+    );
+
+    border-top: 5px solid #a76632;
+
+    box-shadow:
+        0 -5px 20px rgba(0,0,0,0.5),
+        inset 0 5px 15px rgba(255,190,100,0.12);
+
+    z-index: 3;
+}
+
+/* TABLE LIGHT REFLECTION */
+.table-light {
+    position: absolute;
+    bottom: 16%;
+    left: 5%;
+
+    width: 50%;
+    height: 30px;
+
+    background: radial-gradient(
+        ellipse,
+        rgba(255,180,65,0.65),
+        transparent 75%
+    );
+
+    opacity: 0;
+    transition: opacity 1s ease;
+    z-index: 4;
+    pointer-events: none;
+}
+
+body.active .table-light {
+    opacity: 1;
+}
+
+/* LAMP */
+.lamp {
+    position: absolute;
+    left: 7%;
+    bottom: 16%;
+
+    width: 280px;
+    height: 520px;
+
+    z-index: 5;
+}
+
+/* LAMP BASE */
+.base {
+    position: absolute;
+    bottom: 0;
+    left: 5px;
+
+    width: 190px;
+    height: 45px;
+
+    background: linear-gradient(
+        to bottom,
+        #777,
+        #292929,
+        #080808
+    );
+
+    border-radius: 50%;
+    border: 2px solid #555;
+
+    box-shadow: 0 8px 15px #000;
+    z-index: 4;
+}
+
+/* BASE HIGHLIGHT */
+.base::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 15px;
+
+    width: 155px;
+    height: 10px;
+
+    border-radius: 50%;
+    background: #ffffff22;
+}
+
+/* LOWER STAND */
+.stand {
+    position: absolute;
+    bottom: 35px;
+    left: 85px;
+
+    width: 16px;
+    height: 230px;
+
+    background: linear-gradient(
+        to right,
+        #151515,
+        #999,
+        #333,
+        #111
+    );
+
+    border-radius: 10px;
+
+    transform: rotate(-10deg);
+    transform-origin: bottom center;
+    z-index: 2;
+}
+
+/* LAMP JOINT */
+.joint {
+    position: absolute;
+    bottom: 245px;
+    left: 57px;
+
+    width: 30px;
+    height: 30px;
+
+    background: radial-gradient(
+        circle at 35% 30%,
+        #ddd,
+        #555 55%,
+        #111
+    );
+
+    border: 3px solid #777;
+    border-radius: 50%;
+    z-index: 4;
+}
+
+/* UPPER ARM */
+.arm {
+    position: absolute;
+    bottom: 260px;
+    left: 67px;
+
+    width: 14px;
+    height: 175px;
+
+    background: linear-gradient(
+        to right,
+        #111,
+        #aaa,
+        #333,
+        #111
+    );
+
+    border-radius: 10px;
+
+    transform: rotate(43deg);
+    transform-origin: bottom center;
+    z-index: 3;
+}
+
+/* LAMP SHADE */
+.shade {
+    position: absolute;
+    top: 15px;
+    left: 135px;
+
+    width: 155px;
+    height: 105px;
+
+    background: linear-gradient(
+        120deg,
+        #080808,
+        #444,
+        #111
+    );
+
+    border-radius: 80px 80px 25px 25px;
+
+    transform: rotate(-25deg);
+    transform-origin: bottom center;
+
+    border: 2px solid #333;
+
+    box-shadow:
+        0 8px 20px #000,
+        inset 0 3px 10px #ffffff22;
+
+    z-index: 6;
+}
+
+/* SHADE OPENING */
+.shade::after {
+    content: "";
+
+    position: absolute;
+    bottom: -7px;
+    left: 0;
+
+    width: 100%;
+    height: 18px;
+
+    background: linear-gradient(
+        #fff0b0,
+        #a77a36
+    );
+
+    border-radius: 50%;
+}
+
+/* BULB */
+.bulb {
+    position: absolute;
+    bottom: -20px;
+    left: 65px;
+
+    width: 25px;
+    height: 20px;
+
+    background: #fff2b0;
+    border-radius: 50%;
+
+    opacity: 0;
+    box-shadow: 0 0 25px #ffca55;
+
+    transition: opacity 0.5s ease;
+    z-index: 5;
+}
+
+body.active .bulb {
+    opacity: 1;
+}
+
+/* SWITCH */
+.switch {
+    position: absolute;
+    left: 9%;
+    bottom: 2%;
+
+    padding: 14px 25px;
+
+    background: #171717;
+    color: white;
+
+    border: 1px solid #777;
+    border-radius: 18px;
+
+    font-size: 16px;
+    cursor: pointer;
+
+    box-shadow: 0 5px 12px #000;
+
+    transition: 0.3s;
+    z-index: 8;
+}
+
+.switch:hover {
+    transform: translateY(-3px);
+}
+
+body.active .switch {
+    background: #ffb300;
+    color: black;
+
+    box-shadow: 0 0 25px #ffb300;
+}
+
+/* LOGIN BOX */
+.login {
+    position: absolute;
+    right: 9%;
+    top: 50%;
+
+    transform: translateY(-50%) translateX(50px);
+
+    width: 400px;
+    padding: 40px;
+
+    border: 2px solid #ffffff44;
+    border-radius: 25px;
+
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(15px);
+
+    box-shadow: 0 0 30px #ffb34733;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: all 0.8s ease;
+
+    z-index: 6;
+}
+
+/* LOGIN APPEAR */
+body.active .login {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(-50%) translateX(0);
+}
+
+.login h1 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.login p {
+    text-align: center;
+    color: #ddd;
+    margin-bottom: 30px;
+}
+
+/* INPUT FIELDS */
+.login input {
+    display: block;
+    width: 100%;
+
+    padding: 15px;
+    margin-bottom: 20px;
+
+    border: 1px solid #ffffff66;
+    border-radius: 12px;
+
+    background: #ffffff18;
+    color: white;
+
+    font-size: 16px;
+    outline: none;
+}
+
+.login input::placeholder {
+    color: #ddd;
+}
+
+.login input:focus {
+    border-color: #ffb300;
+    box-shadow: 0 0 10px #ffb30066;
+}
+
+/* LOGIN BUTTON */
+.login button {
+    width: 100%;
+    padding: 15px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #ffb300;
+    color: black;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login button:hover {
+    background: #ffd05c;
+    transform: scale(1.02);
+}
+
+/* FORGOT PASSWORD */
+.forgot {
+    margin-top: 22px;
+    text-align: center;
+
+    font-size: 14px;
+    color: white;
+
+    cursor: pointer;
+}
+
+/* TABLET */
+@media(max-width: 900px) {
+
+    .lamp {
+        left: 2%;
+        transform: scale(0.75);
+        transform-origin: bottom left;
+    }
+
+    .login {
+        right: 4%;
+        width: 360px;
+    }
+}
+
+/* MOBILE */
+@media(max-width: 600px) {
+
+    body {
+        overflow: auto;
+    }
+
+    .room {
+        min-height: 750px;
+        height: 100vh;
+    }
+
+    .lamp {
+        left: 2%;
+        bottom: 16%;
+
+        transform: scale(0.48);
+        transform-origin: bottom left;
+    }
+
+    .login {
+        top: 38%;
+        right: 5%;
+
+        width: 90%;
+        padding: 25px;
+    }
+
+    body.active .login {
+        top: 38%;
+    }
+
+    .login h1 {
+        font-size: 25px;
+    }
+
+    .switch {
+        left: 5%;
+        bottom: 2%;
+        padding: 12px 18px;
+    }
+
+    .light-beam {
+        width: 75%;
+        left: 5%;
+    }
+
+}
+
+.forgot {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.forgot:hover {
+    color: #ffb300;
+    text-decoration: underline;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="room">
+
+    <!-- ROOM LIGHT -->
+    <div class="room-glow"></div>
+    <div class="light-beam"></div>
+
+    <!-- TABLE LAMP -->
+    <div class="lamp">
+
+        <div class="base"></div>
+
+        <div class="stand"></div>
+
+        <div class="joint"></div>
+
+        <div class="arm"></div>
+
+        <div class="shade">
+            <div class="bulb"></div>
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table"></div>
+
+    <div class="table-light"></div>
+
+    <!-- LAMP SWITCH -->
+    <button
+        class="switch"
+        id="switchBtn"
+        onclick="toggleLamp()">
+
+        💡 TURN ON
+
+    </button>
+
+    <!-- LOGIN FORM -->
+    <div class="login">
+
+        <h1>Welcome Back!</h1>
+
+        <p>Login to continue</p>
+
+        <form onsubmit="loginUser(event)">
+
+            <input
+                type="text"
+                placeholder="Username"
+                required
+            >
+
+            <input
+                type="password"
+                placeholder="Password"
+                required
+            >
+
+            <button type="submit">
+                LOGIN →
+            </button>
+
+        </form>
+
+       <div class="forgot" onclick="forgotPassword()">
+    Forgot Password?
+</div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* LAMP SWITCH */
+
+function toggleLamp() {
+
+    document.body.classList.toggle("active");
+
+    let button = document.getElementById("switchBtn");
+
+    if (document.body.classList.contains("active")) {
+
+        button.innerHTML = "💡 TURN OFF";
+
+    } else {
+
+        button.innerHTML = "💡 TURN ON";
+
+    }
+
+}
+
+/* LOGIN FUNCTION */
+
+function loginUser(event) {
+
+    event.preventDefault();
+
+    alert("Login button clicked successfully!");
+
+}
+
+function forgotPassword() {
+    let username = document.querySelector(
+        'input[type="text"]'
+    ).value;
+
+    if (username === "") {
+        alert("Please enter your username first!");
+    } else {
+        alert("Password reset instructions will be sent to your registered email.");
+    }
+}
+
+</script>
+
+</body>
+</html>
